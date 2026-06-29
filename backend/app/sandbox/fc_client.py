@@ -4,7 +4,7 @@ Invokes the quorum-sandbox FC function per code submission.
 Each invocation is a fresh, isolated, auto-torn-down container.
 
 Required env vars:
-  FC_ENDPOINT       e.g. https://<account-id>.ap-southeast-1.fc.aliyuncs.com
+  FC_ENDPOINT       e.g. https://123456789.ap-southeast-1.fc.aliyuncs.com  (from FC console)
   FC_FUNCTION_NAME  e.g. quorum-sandbox
   ALIBABA_CLOUD_ACCESS_KEY_ID
   ALIBABA_CLOUD_ACCESS_KEY_SECRET

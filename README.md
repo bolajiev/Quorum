@@ -25,7 +25,7 @@ A single-agent baseline (`qwen-plus`, same sandbox, same cap) runs on the same p
 
 ```bash
 # 1. Clone and install
-git clone <repo-url> && cd Quorum/backend
+git clone https://github.com/bolajiev/Quorum && cd Quorum/backend
 pip install -r requirements.txt
 
 # 2. Configure
