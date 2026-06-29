@@ -7,23 +7,26 @@ const MAX_DOTS = 4;
 
 // ── State ────────────────────────────────────────────────────────────────────
 const sys = {
-  quorum:   { ws: null, dotStates: Array(MAX_DOTS).fill('idle'), entries: [] },
-  baseline: { ws: null, dotStates: Array(MAX_DOTS).fill('idle'), entries: [] },
+  quorum:   { ws: null, dotStates: Array(MAX_DOTS).fill('idle'), entries: [], patches: 0, replans: 0 },
+  baseline: { ws: null, dotStates: Array(MAX_DOTS).fill('idle'), entries: [], patches: 0, replans: 0 },
 };
-let activeTab = 'quorum';
+let activeTab    = 'quorum';
 let benchmarkData = null;
-let tokenChart = null;
+let tokenChart   = null;
+let problemsData = [];
 
 // ── DOM refs ─────────────────────────────────────────────────────────────────
-const $select       = document.getElementById('problem-select');
-const $transcript   = document.getElementById('transcript');
-const $statusBar    = document.getElementById('status-bar');
-const $btnQ         = document.getElementById('btn-quorum');
-const $btnB         = document.getElementById('btn-baseline');
-const $btnBoth      = document.getElementById('btn-both');
-const $clearBtn     = document.getElementById('clear-btn');
-const $customStrip  = document.getElementById('custom-strip');
-const $customProblem= document.getElementById('custom-problem');
+const $select        = document.getElementById('problem-select');
+const $transcript    = document.getElementById('transcript');
+const $statusBar     = document.getElementById('status-bar');
+const $btnQ          = document.getElementById('btn-quorum');
+const $btnB          = document.getElementById('btn-baseline');
+const $btnBoth       = document.getElementById('btn-both');
+const $clearBtn      = document.getElementById('clear-btn');
+const $customStrip   = document.getElementById('custom-strip');
+const $customProblem = document.getElementById('custom-problem');
+const $problemBanner = document.getElementById('problem-banner');
+const $problemBannerText = document.getElementById('problem-banner-text');
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -34,29 +37,46 @@ document.addEventListener('DOMContentLoaded', () => {
   $btnB   .addEventListener('click', () => runSolve('baseline'));
   $btnBoth.addEventListener('click', () => { runSolve('quorum'); runSolve('baseline'); });
   $clearBtn.addEventListener('click', clearTranscript);
-  $select.addEventListener('change', toggleCustomStrip);
+  $select.addEventListener('change', onProblemChange);
 
   document.querySelectorAll('.tab').forEach(t => {
     t.addEventListener('click', () => switchTab(t.dataset.system));
   });
 });
 
+// ── Problem selection ─────────────────────────────────────────────────────────
+function onProblemChange() {
+  const id = $select.value;
+  const isCustom = id === 'custom';
+
+  $customStrip.style.display = isCustom ? 'block' : 'none';
+
+  if (isCustom) {
+    $problemBanner.style.display = 'none';
+  } else {
+    const prob = problemsData.find(p => p.id === id);
+    if (prob) {
+      $problemBannerText.textContent = prob.prompt;
+      $problemBanner.style.display = 'flex';
+    }
+  }
+}
+
 // ── Problems dropdown ─────────────────────────────────────────────────────────
 async function loadProblems() {
   try {
-    // Custom option first
     const customOpt = document.createElement('option');
     customOpt.value = 'custom';
-    customOpt.textContent = '✏ Custom Problem';
+    customOpt.textContent = '✏  Custom Problem';
     $select.appendChild(customOpt);
 
     const sep = document.createElement('option');
     sep.disabled = true;
-    sep.textContent = '─────────────────';
+    sep.textContent = '──────────────────';
     $select.appendChild(sep);
 
-    const data = await fetch(`${API_BASE}/api/problems`).then(r => r.json());
-    data.forEach(p => {
+    problemsData = await fetch(`${API_BASE}/api/problems`).then(r => r.json());
+    problemsData.forEach(p => {
       const opt = document.createElement('option');
       opt.value = p.id;
       opt.textContent = `${p.id} · ${p.difficulty}`;
@@ -64,16 +84,13 @@ async function loadProblems() {
     });
 
     // Default to first real problem
-    $select.value = data[0]?.id || 'custom';
-    toggleCustomStrip();
+    if (problemsData.length) {
+      $select.value = problemsData[0].id;
+      onProblemChange();
+    }
   } catch (e) {
     console.error('Failed to load problems', e);
   }
-}
-
-function toggleCustomStrip() {
-  const isCustom = $select.value === 'custom';
-  $customStrip.style.display = isCustom ? 'block' : 'none';
 }
 
 // ── Benchmark scoreboard ─────────────────────────────────────────────────────
@@ -141,7 +158,7 @@ function renderScoreboard(data) {
     </div>
 
     <div class="chart-wrap">
-      <div class="chart-title">Tokens per problem — Quorum vs Baseline</div>
+      <div class="chart-title">Planning investment — tokens per problem</div>
       <canvas id="token-chart"></canvas>
     </div>
 
@@ -170,7 +187,6 @@ function renderScoreboard(data) {
     </div>
   `;
 
-  // Chart.js token comparison
   if (tokenChart) tokenChart.destroy();
   const ctx = document.getElementById('token-chart').getContext('2d');
   tokenChart = new Chart(ctx, {
@@ -178,31 +194,13 @@ function renderScoreboard(data) {
     data: {
       labels: race.map(r => r.id),
       datasets: [
-        {
-          label: 'Quorum',
-          data: race.map(r => r.quorum.tokens),
-          backgroundColor: 'rgba(79,184,174,.7)',
-          borderColor: 'rgba(79,184,174,1)',
-          borderWidth: 1,
-          borderRadius: 2,
-        },
-        {
-          label: 'Baseline',
-          data: race.map(r => r.baseline.tokens),
-          backgroundColor: 'rgba(232,163,61,.6)',
-          borderColor: 'rgba(232,163,61,1)',
-          borderWidth: 1,
-          borderRadius: 2,
-        },
+        { label: 'Quorum',   data: race.map(r => r.quorum.tokens),   backgroundColor: 'rgba(79,184,174,.7)',  borderColor: 'rgba(79,184,174,1)',  borderWidth: 1, borderRadius: 2 },
+        { label: 'Baseline', data: race.map(r => r.baseline.tokens), backgroundColor: 'rgba(232,163,61,.6)', borderColor: 'rgba(232,163,61,1)', borderWidth: 1, borderRadius: 2 },
       ],
     },
     options: {
-      responsive: true,
-      maintainAspectRatio: true,
-      animation: { duration: 400 },
-      plugins: {
-        legend: { labels: { color: '#7A8499', font: { family: 'IBM Plex Mono', size: 10 }, boxWidth: 10 } },
-      },
+      responsive: true, maintainAspectRatio: true, animation: { duration: 400 },
+      plugins: { legend: { labels: { color: '#7A8499', font: { family: 'IBM Plex Mono', size: 10 }, boxWidth: 10 } } },
       scales: {
         x: { ticks: { color: '#7A8499', font: { family: 'IBM Plex Mono', size: 9 } }, grid: { color: 'rgba(42,47,58,.6)' } },
         y: { ticks: { color: '#7A8499', font: { family: 'IBM Plex Mono', size: 9 } }, grid: { color: 'rgba(42,47,58,.6)' } },
@@ -226,11 +224,13 @@ function runSolve(system) {
     }
   }
 
-  // Close any existing WS for this system
   if (sys[system].ws) { sys[system].ws.close(); sys[system].ws = null; }
 
   resetRace(system);
-  sys[system].entries = [];
+  sys[system].entries  = [];
+  sys[system].patches  = 0;
+  sys[system].replans  = 0;
+  updateNegotiations(system);
   if (activeTab === system) renderTranscript();
 
   setStatus('running', `Running ${system} on ${problemId}…`);
@@ -247,11 +247,8 @@ function runSolve(system) {
 
   ws.addEventListener('message', ({ data }) => {
     const msg = JSON.parse(data);
-    if (msg.type === 'result') {
-      handleResult(system, msg);
-    } else {
-      handleEvent(system, msg);
-    }
+    if (msg.type === 'result') handleResult(system, msg);
+    else handleEvent(system, msg);
   });
 
   ws.addEventListener('close', () => {
@@ -260,7 +257,7 @@ function runSolve(system) {
   });
 
   ws.addEventListener('error', () => {
-    appendEntry(system, 'orchestrator', 'error', 'Connection error');
+    appendEntry(system, 'orchestrator', 'error', { text: 'Connection error' });
     sys[system].ws = null;
     setButtons(false);
     setStatus('failed', 'WebSocket error');
@@ -271,58 +268,60 @@ function runSolve(system) {
 function handleEvent(system, msg) {
   const { agent, type, data } = msg;
 
-  // Update race phase
-  const phase = { planner: 'PLANNING', coder: 'CODING', verifier: 'VERIFYING', critic: 'CRITIQUING', orchestrator: '' };
-  if (phase[agent]) setPhase(system, phase[agent]);
+  const phaseMap = { planner: 'PLANNING', coder: 'CODING', verifier: 'VERIFYING', critic: 'CRITIQUING' };
+  if (phaseMap[agent]) setPhase(system, phaseMap[agent]);
 
-  // Update race dots on coder events
   if (agent === 'coder' && type === 'start') {
     const idx = (data.attempt || 1) - 1;
     setDot(system, idx, 'active');
     setDotLabel(system, idx, String(data.attempt));
   }
   if (agent === 'verifier' && type === 'output') {
-    // Mark the current active dot
     const activeDot = sys[system].dotStates.indexOf('active');
     if (activeDot >= 0) setDot(system, activeDot, data.passed ? 'pass' : 'fail');
   }
 
-  // Build transcript entry
+  // ── Critic: show negotiation card ─────────────────────────────────────────
+  if (agent === 'critic' && type === 'output') {
+    const action = (data.action || '').toLowerCase();
+    if (action === 'patch')   { sys[system].patches++; updateNegotiations(system); }
+    if (action === 'replan')  { sys[system].replans++; updateNegotiations(system); }
+    appendEntry(system, 'critic', 'negotiation', { action, reasoning: data.reasoning, guidance: data.guidance });
+    return;
+  }
+
+  // ── Normal entries ────────────────────────────────────────────────────────
   let text = '', extra = null;
+
   if (agent === 'planner' && type === 'output') {
     text = `Approach: ${data.approach || ''}`;
     if (data.edge_cases?.length) text += `\nEdge cases: ${data.edge_cases.join(', ')}`;
+    if (data.complexity_target)  text += `\nComplexity: ${data.complexity_target}`;
   } else if (agent === 'coder' && type === 'start') {
     text = `Attempt ${data.attempt}…`;
   } else if (agent === 'coder' && type === 'output') {
     const lines = (data.code || '').split('\n').slice(0, 8).join('\n');
     const truncated = (data.code || '').split('\n').length > 8;
     extra = { code: lines + (truncated ? '\n…' : '') };
-    text = '';
   } else if (agent === 'coder' && type === 'error') {
     text = `⚠ ${data.reason || 'No code block returned'}`;
   } else if (agent === 'verifier' && type === 'output') {
-    if (data.passed && data.note) {
-      text = `✓ ${data.note}`;
-    } else if (data.passed) {
-      text = '✓ All tests passed';
-    } else {
+    if (data.passed && data.note) text = `✓ ${data.note}`;
+    else if (data.passed)         text = '✓ All tests passed';
+    else {
       const fr = parseFR(data.failure_report);
       text = `✕ ${data.num_failures} test(s) failed — ${fr}`;
     }
-  } else if (agent === 'critic' && type === 'output') {
-    text = `action: ${(data.action || '').toUpperCase()}  ·  ${(data.reasoning || '').slice(0, 100)}`;
-    if (data.guidance) text += `\nGuidance: ${data.guidance.slice(0, 100)}`;
   } else if (agent === 'orchestrator' && type === 'done') {
     text = data.status === 'solved'
       ? `✓ SOLVED in ${data.attempts} attempt(s)`
       : `✕ UNSOLVED — ${data.reason || ''}`;
     setPhase(system, '');
   } else {
-    return; // skip start/other noisy events
+    return;
   }
 
-  if (text || extra) appendEntry(system, agent, type, text, extra);
+  if (text || extra) appendEntry(system, agent, type, { text, extra });
 }
 
 function handleResult(system, msg) {
@@ -337,8 +336,8 @@ function handleResult(system, msg) {
 }
 
 // ── Transcript rendering ──────────────────────────────────────────────────────
-function appendEntry(system, agent, type, text, extra) {
-  sys[system].entries.push({ agent, type, text, extra, ts: Date.now() });
+function appendEntry(system, agent, type, payload) {
+  sys[system].entries.push({ agent, type, payload, ts: Date.now() });
   if (activeTab === system) renderTranscript();
 }
 
@@ -348,43 +347,62 @@ function renderTranscript() {
     $transcript.innerHTML = '<div class="empty-state">Select a problem and press Run to start.</div>';
     return;
   }
+
   $transcript.innerHTML = entries.map(e => {
-    const label = e.agent.toUpperCase().padEnd(10);
-    let bodyHtml = '';
-    if (e.text) {
-      const cls = e.text.startsWith('✓') ? 'pass' : e.text.startsWith('✕') ? 'fail' : '';
-      bodyHtml += `<div class="tx-body ${cls}">${escHtml(e.text)}</div>`;
-    }
-    if (e.extra?.code) {
-      bodyHtml += `<pre class="tx-code">${escHtml(e.extra.code)}</pre>`;
-    }
-    return `<div class="tx-entry">
-      <div class="tx-header">
-        <span class="tx-chip" data-agent="${e.agent}">${e.agent.toUpperCase()}</span>
-        <span class="tx-label">${label}</span>
-      </div>
-      ${bodyHtml}
-    </div>`;
+    if (e.type === 'negotiation') return renderNegotiationCard(e);
+    return renderNormalEntry(e);
   }).join('<hr class="tx-divider">');
 
   $transcript.scrollTop = $transcript.scrollHeight;
 }
 
+function renderNegotiationCard(e) {
+  const { action, reasoning, guidance } = e.payload;
+  const actionClass = action === 'give_up' ? 'give_up' : action;
+  const actionLabel = action === 'give_up' ? 'GIVE UP' : action.toUpperCase();
+  return `
+    <div class="tx-negotiation">
+      <div class="tx-negotiation-header">
+        <span class="tx-negotiation-label">CRITIC DECISION</span>
+        <span class="tx-action-badge ${actionClass}">${actionLabel}</span>
+      </div>
+      ${reasoning ? `<div class="tx-negotiation-reasoning">${escHtml(reasoning)}</div>` : ''}
+      ${guidance  ? `<div class="tx-negotiation-guidance">→ ${escHtml(guidance)}</div>` : ''}
+    </div>`;
+}
+
+function renderNormalEntry(e) {
+  const { text, extra } = e.payload;
+  let bodyHtml = '';
+  if (text) {
+    const cls = text.startsWith('✓') ? 'pass' : text.startsWith('✕') ? 'fail' : '';
+    bodyHtml += `<div class="tx-body ${cls}">${escHtml(text)}</div>`;
+  }
+  if (extra?.code) {
+    bodyHtml += `<pre class="tx-code">${escHtml(extra.code)}</pre>`;
+  }
+  return `<div class="tx-entry">
+    <div class="tx-header">
+      <span class="tx-chip" data-agent="${e.agent}">${e.agent.toUpperCase()}</span>
+    </div>
+    ${bodyHtml}
+  </div>`;
+}
+
 function switchTab(system) {
   activeTab = system;
-  document.querySelectorAll('.tab').forEach(t => {
-    t.classList.toggle('active', t.dataset.system === system);
-  });
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.system === system));
   renderTranscript();
 }
 
 function clearTranscript() {
-  sys.quorum.entries = [];
-  sys.baseline.entries = [];
+  sys.quorum.entries   = []; sys.quorum.patches   = 0; sys.quorum.replans   = 0;
+  sys.baseline.entries = []; sys.baseline.patches = 0; sys.baseline.replans = 0;
+  updateNegotiations('quorum');
   renderTranscript();
 }
 
-// ── Race lane helpers ─────────────────────────────────────────────────────────
+// ── Race helpers ──────────────────────────────────────────────────────────────
 function resetRace(system) {
   sys[system].dotStates = Array(MAX_DOTS).fill('idle');
   document.querySelectorAll(`#dots-${system} .dot`).forEach((d, i) => {
@@ -393,8 +411,7 @@ function resetRace(system) {
   });
   setPhase(system, '');
   const v = document.getElementById(`verdict-${system}`);
-  v.className = 'lane-verdict';
-  v.textContent = '';
+  if (v) { v.className = 'lane-verdict'; v.textContent = ''; }
 }
 
 function setDot(system, idx, state) {
@@ -416,8 +433,16 @@ function setPhase(system, phase) {
 
 function setVerdict(system, cls, text) {
   const el = document.getElementById(`verdict-${system}`);
-  el.className = `lane-verdict show ${cls}`;
-  el.textContent = text;
+  if (el) { el.className = `lane-verdict show ${cls}`; el.textContent = text; }
+}
+
+function updateNegotiations(system) {
+  const el = document.getElementById(`neg-${system}`);
+  if (!el) return;
+  const { patches, replans } = sys[system];
+  el.innerHTML = '';
+  if (patches > 0) el.insertAdjacentHTML('beforeend', `<span class="neg-badge patch">${patches} patch${patches>1?'es':''}</span>`);
+  if (replans > 0) el.insertAdjacentHTML('beforeend', `<span class="neg-badge replan">${replans} replan${replans>1?'s':''}</span>`);
 }
 
 // ── UI helpers ────────────────────────────────────────────────────────────────
@@ -432,17 +457,12 @@ function setStatus(cls, text) {
 
 function parseFR(raw) {
   if (!raw) return '';
-  try {
-    const obj = JSON.parse(raw);
-    return obj.summary || obj.suggestion || '';
-  } catch { return String(raw).slice(0, 80); }
+  try { const o = JSON.parse(raw); return o.summary || o.suggestion || ''; }
+  catch { return String(raw).slice(0, 80); }
 }
 
 function escHtml(s) {
   return String(s)
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/\n/g, '<br>');
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/\n/g, '<br>');
 }

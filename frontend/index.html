@@ -5,101 +5,158 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Quorum — Agent Society</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-  <link rel="stylesheet" href="styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="landing.css">
 </head>
 <body>
-  <header class="topbar">
-    <div class="logo">QUORUM</div>
-    <div class="controls">
-      <select id="problem-select" class="select"></select>
-      <button id="btn-quorum"   class="btn btn--quorum">Run Quorum</button>
-      <button id="btn-both"     class="btn btn--both">Run Both</button>
-      <button id="btn-baseline" class="btn btn--baseline">Run Baseline</button>
+
+  <!-- ── Nav ──────────────────────────────────────────────────────────────── -->
+  <nav class="nav">
+    <div class="nav-logo">QUORUM</div>
+    <div class="nav-links">
+      <a href="https://github.com/bolajiev/Quorum" target="_blank" class="nav-link">GitHub ↗</a>
+      <a href="/console.html" class="nav-cta">Launch Console →</a>
     </div>
-    <div id="status-bar" class="status-bar">Ready</div>
-  </header>
+  </nav>
 
-  <!-- Custom problem input — shown only when "Custom" is selected -->
-  <div id="custom-strip" class="custom-strip">
-    <textarea
-      id="custom-problem"
-      class="custom-textarea"
-      placeholder="Describe your programming problem here. Be specific about input format, output format, and constraints. Example: Read two integers on one line and print their sum."
-      rows="4"
-    ></textarea>
-  </div>
+  <!-- ── Hero ─────────────────────────────────────────────────────────────── -->
+  <section class="hero">
+    <div class="hero-tag">Track 3 · Agent Society · Qwen Cloud Hackathon</div>
+    <h1 class="hero-title">QUORUM</h1>
+    <p class="hero-sub">
+      Four specialised agents collaborate to solve competitive programming problems
+      through structured planning, implementation, sandboxed verification, and critical review.
+      Benchmarked head-to-head against a single-agent baseline under identical conditions.
+    </p>
+    <a href="/console.html" class="hero-btn">Launch Console →</a>
+  </section>
 
-  <main class="workspace">
+  <!-- ── Agents ────────────────────────────────────────────────────────────── -->
+  <section class="section agents-section">
+    <div class="section-label">THE AGENTS</div>
+    <div class="agents-grid">
 
-    <!-- ── Left: live transcript ─────────────────────────────────────────── -->
-    <section class="panel transcript-panel">
-      <div class="panel-header">
-        <span class="panel-title">LIVE TRANSCRIPT</span>
-        <div class="tab-group">
-          <button class="tab active" data-system="quorum">Quorum</button>
-          <button class="tab"        data-system="baseline">Baseline</button>
+      <div class="agent-card" data-role="planner">
+        <div class="agent-header">
+          <span class="agent-chip">PLANNER</span>
+          <span class="agent-model">qwen-turbo</span>
         </div>
-        <button id="clear-btn" class="icon-btn" title="Clear transcript">✕</button>
+        <p class="agent-desc">Decomposes the problem into a structured plan: approach, edge cases, complexity target, and test ideas. On a replan, incorporates the Critic's feedback to correct a wrong strategy.</p>
+        <div class="agent-output">Output: <code>{"approach", "edge_cases", "test_ideas", "complexity_target"}</code></div>
       </div>
-      <div id="transcript" class="transcript-feed">
-        <div class="empty-state">Select a problem and press Run to start.</div>
+
+      <div class="agent-card" data-role="coder">
+        <div class="agent-header">
+          <span class="agent-chip">CODER</span>
+          <span class="agent-model">qwen-max</span>
+        </div>
+        <p class="agent-desc">Implements the plan. Returns code only — no prose. Up to 4 attempts per problem. Each retry receives a structured failure report from the Verifier, not raw tracebacks.</p>
+        <div class="agent-output">Output: <code>```python\n# complete stdin→stdout program\n```</code></div>
       </div>
-    </section>
 
-    <!-- ── Right: race readout + scoreboard ─────────────────────────────── -->
-    <aside class="side-panel">
-
-      <section class="panel race-panel">
-        <div class="panel-header"><span class="panel-title">RACE</span></div>
-        <div class="race-container">
-
-          <div class="race-lane" id="lane-quorum">
-            <div class="lane-meta">
-              <span class="lane-label" data-system="quorum">QUORUM</span>
-              <span class="lane-phase" id="phase-quorum"></span>
-            </div>
-            <div class="lane-track">
-              <div class="lane-dots" id="dots-quorum">
-                <div class="dot" data-idx="0"></div>
-                <div class="dot" data-idx="1"></div>
-                <div class="dot" data-idx="2"></div>
-                <div class="dot" data-idx="3"></div>
-              </div>
-              <div class="lane-verdict" id="verdict-quorum"></div>
-            </div>
-          </div>
-
-          <div class="race-lane" id="lane-baseline">
-            <div class="lane-meta">
-              <span class="lane-label" data-system="baseline">BASELINE</span>
-              <span class="lane-phase" id="phase-baseline"></span>
-            </div>
-            <div class="lane-track">
-              <div class="lane-dots" id="dots-baseline">
-                <div class="dot" data-idx="0"></div>
-                <div class="dot" data-idx="1"></div>
-                <div class="dot" data-idx="2"></div>
-                <div class="dot" data-idx="3"></div>
-              </div>
-              <div class="lane-verdict" id="verdict-baseline"></div>
-            </div>
-          </div>
-
+      <div class="agent-card" data-role="verifier">
+        <div class="agent-header">
+          <span class="agent-chip">VERIFIER</span>
+          <span class="agent-model">deterministic</span>
         </div>
-      </section>
+        <p class="agent-desc">Runs the Coder's solution against sample and hidden tests inside an isolated sandbox (Alibaba Cloud Function Compute). Summarises failures into compact structured reports to save tokens downstream.</p>
+        <div class="agent-output">Output: <code>{"passed", "failures": [{test_id, expected, actual}]}</code></div>
+      </div>
 
-      <section class="panel scoreboard-panel">
-        <div class="panel-header"><span class="panel-title">BENCHMARK SCOREBOARD</span></div>
-        <div id="scoreboard-content">
-          <div class="loading">Loading benchmark data…</div>
+      <div class="agent-card" data-role="critic">
+        <div class="agent-header">
+          <span class="agent-chip">CRITIC</span>
+          <span class="agent-model">qwen-plus</span>
         </div>
-      </section>
+        <p class="agent-desc">Reviews failures and makes a three-way decision. This is the disagreement-resolution mechanism Track 3 requires — the Critic can override the current approach entirely.</p>
+        <div class="agent-output">Output: <code>{"action": "patch" | "replan" | "give_up", reasoning, guidance}</code></div>
+      </div>
 
-    </aside>
-  </main>
+    </div>
+  </section>
 
-  <script src="app.js"></script>
+  <!-- ── Loop ──────────────────────────────────────────────────────────────── -->
+  <section class="section loop-section">
+    <div class="section-label">THE LOOP</div>
+    <div class="loop-diagram">
+      <div class="loop-node" data-role="planner">PLAN</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node" data-role="coder">CODE</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node" data-role="verifier">VERIFY</div>
+      <div class="loop-arrow">→</div>
+      <div class="loop-node loop-branch">
+        <div class="branch-pass">SOLVED ✓</div>
+        <div class="branch-sep">or</div>
+        <div class="loop-node" data-role="critic">CRITIQUE</div>
+      </div>
+    </div>
+    <div class="critic-actions">
+      <div class="critic-action patch">PATCH <span>→ retry with guidance</span></div>
+      <div class="critic-action replan">REPLAN <span>→ new plan from Planner</span></div>
+      <div class="critic-action giveup">GIVE UP <span>→ mark unsolved</span></div>
+    </div>
+    <p class="loop-note">Hard caps enforced in code: max 4 Coder attempts · max 2 replans per problem</p>
+  </section>
+
+  <!-- ── Track requirements ────────────────────────────────────────────────── -->
+  <section class="section track-section">
+    <div class="section-label">TRACK 3 REQUIREMENTS</div>
+    <div class="track-grid">
+      <div class="track-row">
+        <span class="track-check">✓</span>
+        <div>
+          <div class="track-req">Task decomposition &amp; role assignment</div>
+          <div class="track-how">Planner produces a structured plan; each agent has a strict typed contract</div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="track-check">✓</span>
+        <div>
+          <div class="track-req">Disagreement &amp; conflict resolution</div>
+          <div class="track-how">Critic decides patch / replan / give_up — logged verbatim to transcript as the negotiation record</div>
+        </div>
+      </div>
+      <div class="track-row">
+        <span class="track-check">✓</span>
+        <div>
+          <div class="track-req">Measurable efficiency gain over single-agent baseline</div>
+          <div class="track-how">Benchmark harness runs both systems on the same 20-problem set under the same retry budget — results visible in the console scoreboard</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── Stack ──────────────────────────────────────────────────────────────── -->
+  <section class="section stack-section">
+    <div class="section-label">STACK</div>
+    <div class="stack-grid">
+      <div class="stack-item"><span class="stack-label">LLM</span> Qwen Cloud — qwen-max · qwen-plus · qwen-turbo</div>
+      <div class="stack-item"><span class="stack-label">Sandbox</span> Alibaba Cloud Function Compute (isolated per invocation)</div>
+      <div class="stack-item"><span class="stack-label">Backend</span> Python 3.11 · FastAPI · WebSockets (live streaming)</div>
+      <div class="stack-item"><span class="stack-label">Frontend</span> HTML/CSS/JS · Chart.js — no build step</div>
+      <div class="stack-item"><span class="stack-label">Deploy</span> Alibaba Cloud ECS (Singapore)</div>
+      <div class="stack-item"><span class="stack-label">License</span> MIT</div>
+    </div>
+  </section>
+
+  <!-- ── CTA ───────────────────────────────────────────────────────────────── -->
+  <section class="section cta-section">
+    <h2 class="cta-title">See it in action</h2>
+    <p class="cta-sub">Watch four agents negotiate a solution in real time. Compare against the single-agent baseline on the same problem.</p>
+    <a href="/console.html" class="hero-btn">Launch Console →</a>
+    <div class="cta-links">
+      <a href="https://github.com/bolajiev/Quorum" target="_blank">GitHub Repository ↗</a>
+      <span>·</span>
+      <a href="/console.html#scoreboard">View Benchmark Results ↗</a>
+    </div>
+  </section>
+
+  <!-- ── Footer ────────────────────────────────────────────────────────────── -->
+  <footer class="footer">
+    <span>QUORUM · Qwen Cloud Global AI Hackathon 2026 · Track 3: Agent Society</span>
+    <span>MIT License · <a href="https://github.com/bolajiev/Quorum" target="_blank">github.com/bolajiev/Quorum</a></span>
+  </footer>
+
 </body>
 </html>

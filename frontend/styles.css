@@ -487,7 +487,134 @@ html, body { display: flex; flex-direction: column; }
 .check { color: var(--pass); }
 .cross { color: var(--fail); }
 
-/* Scrollbar */
+/* ── Problem banner ──────────────────────────────────────────────────────── */
+.problem-banner {
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  padding: 8px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  flex-shrink: 0;
+  max-height: 72px;
+  overflow: hidden;
+}
+.problem-banner-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  letter-spacing: .1em;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 2px 7px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.problem-banner-text {
+  font-family: var(--font-body);
+  font-size: 12px;
+  color: #BDB9AF;
+  line-height: 1.5;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+/* ── Agent legend ────────────────────────────────────────────────────────── */
+.agent-legend {
+  display: flex;
+  gap: 6px;
+  padding: 6px 14px;
+  background: var(--surface2);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+.legend-item {
+  font-family: var(--font-display);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .07em;
+  padding: 2px 8px;
+  border-radius: 3px;
+}
+.legend-item[data-agent="planner"]  { background: rgba(232,163,61,.15);  color: var(--planner); }
+.legend-item[data-agent="coder"]    { background: rgba(79,184,174,.15);  color: var(--coder); }
+.legend-item[data-agent="verifier"] { background: rgba(139,127,212,.15); color: var(--verifier); }
+.legend-item[data-agent="critic"]   { background: rgba(212,101,79,.15);  color: var(--critic); }
+
+/* ── Critic negotiation card ─────────────────────────────────────────────── */
+.tx-negotiation {
+  border: 1px solid var(--critic);
+  border-left: 4px solid var(--critic);
+  background: rgba(212,101,79,.06);
+  border-radius: 6px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn .3s ease;
+}
+.tx-negotiation-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.tx-negotiation-label {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  color: var(--critic);
+  background: rgba(212,101,79,.15);
+  padding: 2px 9px;
+  border-radius: 3px;
+}
+.tx-action-badge {
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  padding: 3px 12px;
+  border-radius: 4px;
+}
+.tx-action-badge.patch  { background: rgba(79,184,174,.15);  color: var(--coder);   border: 1px solid rgba(79,184,174,.4); }
+.tx-action-badge.replan { background: rgba(232,163,61,.15);  color: var(--planner); border: 1px solid rgba(232,163,61,.4); }
+.tx-action-badge.give_up{ background: rgba(212,101,79,.15);  color: var(--critic);  border: 1px solid rgba(212,101,79,.4); }
+.tx-negotiation-reasoning {
+  font-size: 12px;
+  color: #BDB9AF;
+  line-height: 1.5;
+}
+.tx-negotiation-guidance {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--muted);
+  background: var(--surface2);
+  border-radius: 3px;
+  padding: 6px 8px;
+  border-left: 2px solid var(--critic);
+}
+
+/* ── Negotiations counter ────────────────────────────────────────────────── */
+.negotiations {
+  display: flex;
+  gap: 8px;
+  min-height: 20px;
+  margin-top: 2px;
+}
+.neg-badge {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  padding: 2px 8px;
+  border-radius: 3px;
+  animation: fadeIn .3s ease;
+}
+.neg-badge.patch  { background: rgba(79,184,174,.12);  color: var(--coder); }
+.neg-badge.replan { background: rgba(232,163,61,.12);  color: var(--planner); }
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }

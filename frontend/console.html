@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quorum Console — Agent Society</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=IBM+Plex+Sans:wght@400;500&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a href="/" class="logo" title="Back to landing">QUORUM</a>
+    <div class="controls">
+      <select id="problem-select" class="select"></select>
+      <button id="btn-quorum"   class="btn btn--quorum">Run Quorum</button>
+      <button id="btn-both"     class="btn btn--both">Run Both</button>
+      <button id="btn-baseline" class="btn btn--baseline">Run Baseline</button>
+    </div>
+    <div id="status-bar" class="status-bar">Ready</div>
+  </header>
+
+  <!-- Custom problem input -->
+  <div id="custom-strip" class="custom-strip">
+    <textarea
+      id="custom-problem"
+      class="custom-textarea"
+      placeholder="Describe your programming problem. Be specific about input format, output format, and constraints. Example: Read two integers on one line and print their sum."
+      rows="4"
+    ></textarea>
+  </div>
+
+  <!-- Problem statement banner -->
+  <div id="problem-banner" class="problem-banner" style="display:none">
+    <span class="problem-banner-label">PROBLEM</span>
+    <span id="problem-banner-text" class="problem-banner-text"></span>
+  </div>
+
+  <main class="workspace">
+
+    <!-- ── Left: live transcript ─────────────────────────────────────────── -->
+    <section class="panel transcript-panel">
+      <div class="panel-header">
+        <span class="panel-title">LIVE TRANSCRIPT</span>
+        <div class="tab-group">
+          <button class="tab active" data-system="quorum">Quorum</button>
+          <button class="tab"        data-system="baseline">Baseline</button>
+        </div>
+        <button id="clear-btn" class="icon-btn" title="Clear transcript">✕</button>
+      </div>
+
+      <!-- Agent legend -->
+      <div class="agent-legend">
+        <span class="legend-item" data-agent="planner">PLANNER</span>
+        <span class="legend-item" data-agent="coder">CODER</span>
+        <span class="legend-item" data-agent="verifier">VERIFIER</span>
+        <span class="legend-item" data-agent="critic">CRITIC</span>
+      </div>
+
+      <div id="transcript" class="transcript-feed">
+        <div class="empty-state">Select a problem and press Run to start.</div>
+      </div>
+    </section>
+
+    <!-- ── Right: race readout + scoreboard ─────────────────────────────── -->
+    <aside class="side-panel">
+
+      <section class="panel race-panel">
+        <div class="panel-header"><span class="panel-title">RACE</span></div>
+        <div class="race-container">
+
+          <div class="race-lane" id="lane-quorum">
+            <div class="lane-meta">
+              <span class="lane-label" data-system="quorum">QUORUM</span>
+              <span class="lane-phase" id="phase-quorum"></span>
+            </div>
+            <div class="lane-track">
+              <div class="lane-dots" id="dots-quorum">
+                <div class="dot" data-idx="0"></div>
+                <div class="dot" data-idx="1"></div>
+                <div class="dot" data-idx="2"></div>
+                <div class="dot" data-idx="3"></div>
+              </div>
+              <div class="lane-verdict" id="verdict-quorum"></div>
+            </div>
+            <div class="negotiations" id="neg-quorum"></div>
+          </div>
+
+          <div class="race-lane" id="lane-baseline">
+            <div class="lane-meta">
+              <span class="lane-label" data-system="baseline">BASELINE</span>
+              <span class="lane-phase" id="phase-baseline"></span>
+            </div>
+            <div class="lane-track">
+              <div class="lane-dots" id="dots-baseline">
+                <div class="dot" data-idx="0"></div>
+                <div class="dot" data-idx="1"></div>
+                <div class="dot" data-idx="2"></div>
+                <div class="dot" data-idx="3"></div>
+              </div>
+              <div class="lane-verdict" id="verdict-baseline"></div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <section class="panel scoreboard-panel">
+        <div class="panel-header"><span class="panel-title">BENCHMARK SCOREBOARD</span></div>
+        <div id="scoreboard-content">
+          <div class="loading">Loading benchmark data…</div>
+        </div>
+      </section>
+
+    </aside>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
