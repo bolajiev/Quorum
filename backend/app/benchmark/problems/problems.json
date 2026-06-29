@@ -1,0 +1,185 @@
+[
+  {
+    "id": "HE-1",
+    "difficulty": "easy",
+    "prompt": "Read a float threshold on the first line, then a space-separated list of floats on the second line. Print True if any two numbers in the list differ by less than the threshold, otherwise print False.\n\nExample:\n0.3\n1.0 2.0 3.0\nOutput: False\n\nExample:\n0.5\n1.0 1.3 2.0\nOutput: True",
+    "tests": [
+      {"id": "t1", "input": "0.3\n1.0 2.0 3.0\n", "expected_output": "False"},
+      {"id": "t2", "input": "0.5\n1.0 1.3 2.0\n", "expected_output": "True"},
+      {"id": "t3", "input": "1.1\n1.0 2.0 3.0\n", "expected_output": "True"},
+      {"id": "t4", "input": "0.05\n1.0 2.0 3.0\n", "expected_output": "False"},
+      {"id": "t5", "input": "2.1\n1.0 5.0 3.0\n", "expected_output": "True"}
+    ]
+  },
+  {
+    "id": "HE-2",
+    "difficulty": "easy",
+    "prompt": "Read space-separated integers on one line and print the count of distinct values.\n\nExample:\n1 2 3 2 4 1\nOutput: 4",
+    "tests": [
+      {"id": "t1", "input": "1 2 3 2 4 1\n", "expected_output": "4"},
+      {"id": "t2", "input": "1 1 1 1\n", "expected_output": "1"},
+      {"id": "t3", "input": "5\n", "expected_output": "1"},
+      {"id": "t4", "input": "1 2 3 4 5\n", "expected_output": "5"},
+      {"id": "t5", "input": "-1 0 1 -1 0\n", "expected_output": "3"}
+    ]
+  },
+  {
+    "id": "HE-3",
+    "difficulty": "easy",
+    "prompt": "Read an integer n and print the nth Fibonacci number (0-indexed: fib(0)=0, fib(1)=1).\n\nExample:\n7\nOutput: 13",
+    "tests": [
+      {"id": "t1", "input": "0\n", "expected_output": "0"},
+      {"id": "t2", "input": "1\n", "expected_output": "1"},
+      {"id": "t3", "input": "7\n", "expected_output": "13"},
+      {"id": "t4", "input": "10\n", "expected_output": "55"},
+      {"id": "t5", "input": "15\n", "expected_output": "610"}
+    ]
+  },
+  {
+    "id": "HE-4",
+    "difficulty": "easy",
+    "prompt": "Read a positive integer and print the sum of its digits.\n\nExample:\n123\nOutput: 6\n\nExample:\n9999\nOutput: 36",
+    "tests": [
+      {"id": "t1", "input": "123\n", "expected_output": "6"},
+      {"id": "t2", "input": "9999\n", "expected_output": "36"},
+      {"id": "t3", "input": "1000\n", "expected_output": "1"},
+      {"id": "t4", "input": "1\n", "expected_output": "1"},
+      {"id": "t5", "input": "999\n", "expected_output": "27"}
+    ]
+  },
+  {
+    "id": "HE-5",
+    "difficulty": "easy",
+    "prompt": "Read a binary string and print its decimal value.\n\nExample:\n101\nOutput: 5\n\nExample:\n1111\nOutput: 15",
+    "tests": [
+      {"id": "t1", "input": "101\n", "expected_output": "5"},
+      {"id": "t2", "input": "1111\n", "expected_output": "15"},
+      {"id": "t3", "input": "0\n", "expected_output": "0"},
+      {"id": "t4", "input": "1000\n", "expected_output": "8"},
+      {"id": "t5", "input": "11111111\n", "expected_output": "255"}
+    ]
+  },
+  {
+    "id": "HE-6",
+    "difficulty": "easy",
+    "prompt": "Read an integer n and print the FizzBuzz sequence from 1 to n, space-separated. Print Fizz for multiples of 3, Buzz for multiples of 5, FizzBuzz for multiples of both.\n\nExample:\n5\nOutput: 1 2 Fizz 4 Buzz",
+    "tests": [
+      {"id": "t1", "input": "5\n", "expected_output": "1 2 Fizz 4 Buzz"},
+      {"id": "t2", "input": "1\n", "expected_output": "1"},
+      {"id": "t3", "input": "3\n", "expected_output": "1 2 Fizz"},
+      {"id": "t4", "input": "15\n", "expected_output": "1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz"},
+      {"id": "t5", "input": "6\n", "expected_output": "1 2 Fizz 4 Buzz Fizz"}
+    ]
+  },
+  {
+    "id": "HE-7",
+    "difficulty": "medium",
+    "prompt": "Read a string of brackets: (, ), [, ], {, }. Print True if the brackets are balanced (every open bracket closed in correct order), otherwise False.\n\nExample:\n()[]{}\nOutput: True\n\nExample:\n([)]\nOutput: False",
+    "tests": [
+      {"id": "t1", "input": "()\n", "expected_output": "True"},
+      {"id": "t2", "input": "()[]{}\n", "expected_output": "True"},
+      {"id": "t3", "input": "(]\n", "expected_output": "False"},
+      {"id": "t4", "input": "([)]\n", "expected_output": "False"},
+      {"id": "t5", "input": "{[]}\n", "expected_output": "True"},
+      {"id": "t6", "input": "\n", "expected_output": "True"}
+    ]
+  },
+  {
+    "id": "HE-8",
+    "difficulty": "medium",
+    "prompt": "Read a non-empty string (no spaces) and print its run-length encoding: for each run of consecutive identical characters, output the count followed by the character.\n\nExample:\naabcccdddd\nOutput: 2a1b3c4d\n\nExample:\nabcd\nOutput: 1a1b1c1d",
+    "tests": [
+      {"id": "t1", "input": "aabcccdddd\n", "expected_output": "2a1b3c4d"},
+      {"id": "t2", "input": "abcd\n", "expected_output": "1a1b1c1d"},
+      {"id": "t3", "input": "aaaa\n", "expected_output": "4a"},
+      {"id": "t4", "input": "aab\n", "expected_output": "2a1b"},
+      {"id": "t5", "input": "a\n", "expected_output": "1a"}
+    ]
+  },
+  {
+    "id": "HE-9",
+    "difficulty": "medium",
+    "prompt": "Read an integer n >= 2 and print its prime factors in ascending order, space-separated (repeat factors as needed).\n\nExample:\n12\nOutput: 2 2 3\n\nExample:\n7\nOutput: 7",
+    "tests": [
+      {"id": "t1", "input": "12\n", "expected_output": "2 2 3"},
+      {"id": "t2", "input": "15\n", "expected_output": "3 5"},
+      {"id": "t3", "input": "7\n", "expected_output": "7"},
+      {"id": "t4", "input": "100\n", "expected_output": "2 2 5 5"},
+      {"id": "t5", "input": "36\n", "expected_output": "2 2 3 3"}
+    ]
+  },
+  {
+    "id": "HE-10",
+    "difficulty": "medium",
+    "prompt": "Read a target integer on the first line and a space-separated list of integers on the second line. Find the two indices (0-indexed) whose values sum to the target and print them space-separated (smaller index first). There is exactly one solution and you may not use the same element twice.\n\nExample:\n9\n2 7 11 15\nOutput: 0 1",
+    "tests": [
+      {"id": "t1", "input": "9\n2 7 11 15\n", "expected_output": "0 1"},
+      {"id": "t2", "input": "6\n3 2 4\n", "expected_output": "1 2"},
+      {"id": "t3", "input": "6\n3 3\n", "expected_output": "0 1"},
+      {"id": "t4", "input": "17\n2 7 11 15\n", "expected_output": "0 3"},
+      {"id": "t5", "input": "18\n2 7 11 15\n", "expected_output": "1 2"}
+    ]
+  },
+  {
+    "id": "HE-11",
+    "difficulty": "medium",
+    "prompt": "Read an integer n on the first line, then n strings each on its own line. Print the longest common prefix of all strings. If there is no common prefix, print an empty line.\n\nExample:\n3\nflower\nflow\nflight\nOutput: fl",
+    "tests": [
+      {"id": "t1", "input": "3\nflower\nflow\nflight\n", "expected_output": "fl"},
+      {"id": "t2", "input": "3\ndog\nracecar\ncar\n", "expected_output": ""},
+      {"id": "t3", "input": "2\naa\na\n", "expected_output": "a"},
+      {"id": "t4", "input": "1\nabc\n", "expected_output": "abc"},
+      {"id": "t5", "input": "3\nabc\nabc\nabc\n", "expected_output": "abc"}
+    ]
+  },
+  {
+    "id": "HE-12",
+    "difficulty": "medium",
+    "prompt": "Read an integer n (cents) and print the minimum number of coins needed to make exactly n cents using coins of 1, 5, 10, and 25 cents.\n\nExample:\n11\nOutput: 2\n\nExample (11 = 10 + 1):\nFor n=41: 25+10+5+1 = 4 coins.",
+    "tests": [
+      {"id": "t1", "input": "11\n", "expected_output": "2"},
+      {"id": "t2", "input": "0\n", "expected_output": "0"},
+      {"id": "t3", "input": "30\n", "expected_output": "2"},
+      {"id": "t4", "input": "41\n", "expected_output": "4"},
+      {"id": "t5", "input": "3\n", "expected_output": "3"}
+    ]
+  },
+  {
+    "id": "HE-13",
+    "difficulty": "hard",
+    "prompt": "Read a string and print the length of its longest palindromic substring.\n\nExample:\nbabad\nOutput: 3\n\nExample:\ncbbd\nOutput: 2\n\n(Both 'bab' and 'aba' have length 3 for 'babad'.)",
+    "tests": [
+      {"id": "t1", "input": "babad\n", "expected_output": "3"},
+      {"id": "t2", "input": "cbbd\n", "expected_output": "2"},
+      {"id": "t3", "input": "a\n", "expected_output": "1"},
+      {"id": "t4", "input": "racecar\n", "expected_output": "7"},
+      {"id": "t5", "input": "abcba\n", "expected_output": "5"},
+      {"id": "t6", "input": "aacabdkacaa\n", "expected_output": "3"}
+    ]
+  },
+  {
+    "id": "HE-14",
+    "difficulty": "hard",
+    "prompt": "Read an integer k on the first line and a string on the second line. Apply a Caesar cipher: shift each alphabetic character forward by k positions (wrapping around, preserving case). Non-alphabetic characters are unchanged.\n\nExample:\n3\nHello, World!\nOutput: Khoor, Zruog!\n\nExample:\n13\nROT13\nOutput: EBG13",
+    "tests": [
+      {"id": "t1", "input": "3\nHello, World!\n", "expected_output": "Khoor, Zruog!"},
+      {"id": "t2", "input": "13\nROT13\n", "expected_output": "EBG13"},
+      {"id": "t3", "input": "0\nabc\n", "expected_output": "abc"},
+      {"id": "t4", "input": "26\nxyz\n", "expected_output": "xyz"},
+      {"id": "t5", "input": "1\nz\n", "expected_output": "a"},
+      {"id": "t6", "input": "25\nabc\n", "expected_output": "zab"}
+    ]
+  },
+  {
+    "id": "HE-15",
+    "difficulty": "hard",
+    "prompt": "Read a space-separated list of integers and print the maximum sum of any contiguous subarray (must contain at least one element).\n\nExample:\n-2 1 -3 4 -1 2 1 -5 4\nOutput: 6\n\nExample:\n5 4 -1 7 8\nOutput: 23",
+    "tests": [
+      {"id": "t1", "input": "-2 1 -3 4 -1 2 1 -5 4\n", "expected_output": "6"},
+      {"id": "t2", "input": "1\n", "expected_output": "1"},
+      {"id": "t3", "input": "-1 -2 -3\n", "expected_output": "-1"},
+      {"id": "t4", "input": "5 4 -1 7 8\n", "expected_output": "23"},
+      {"id": "t5", "input": "1 2 3 4 5\n", "expected_output": "15"}
+    ]
+  }
+]

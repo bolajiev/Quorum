@@ -1,0 +1,1476 @@
+{
+  "run_at": "2026-06-29T10:14:49Z",
+  "num_problems": 15,
+  "problems": [
+    {
+      "id": "HE-1",
+      "difficulty": "easy",
+      "prompt": "Read a float threshold on the first line, then a space-separated list of floats on the second line. Print True if any two numbers in the list differ by less than the threshold, otherwise print False.\n\nExample:\n0.3\n1.0 2.0 3.0\nOutput: False\n\nExample:\n0.5\n1.0 1.3 2.0\nOutput: True",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 626,
+        "wall_clock_seconds": 5.09,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-1"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Sort the list of floats, then check adjacent pairs to see if their difference is less than the threshold. This reduces the problem from O(n^2) to O(n log n).",
+              "edge_cases": [
+                "All numbers are the same",
+                "Only one number in the list",
+                "Threshold is zero"
+              ],
+              "test_ideas": [
+                "Threshold exactly matches the difference between two numbers",
+                "Large list with many close values",
+                "List with no pairs below the threshold"
+              ],
+              "complexity_target": "O(n log n)"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "import sys\n\ndef check_threshold_difference(threshold, numbers):\n    numbers.sort()\n    for i in range(1, len(numbers)):\n        if numbers[i] - numbers[i-1] < threshold:\n            return True\n    return False\n\nthreshold = float(input().strip())\nnumbers = list(map(float, input().strip().split()))\n\nprint(check_threshold_difference(threshold, numbers))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 5
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 210,
+        "wall_clock_seconds": 2.3,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-2",
+      "difficulty": "easy",
+      "prompt": "Read space-separated integers on one line and print the count of distinct values.\n\nExample:\n1 2 3 2 4 1\nOutput: 4",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 469,
+        "wall_clock_seconds": 2.79,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-2"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Read the input line, split it into a list of integers, convert the list to a set to remove duplicates, and then return the size of the set.",
+              "edge_cases": [
+                "Empty input",
+                "All elements are the same",
+                "Only one element"
+              ],
+              "test_ideas": [
+                "Input with all unique elements",
+                "Input with repeated elements",
+                "Input with negative numbers"
+              ],
+              "complexity_target": "O(n)"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "import sys\n\ndef count_distinct_values(input_line):\n    numbers = list(map(int, input_line.split()))\n    distinct_numbers = set(numbers)\n    return len(distinct_numbers)\n\ninput_line = sys.stdin.readline().strip()\nprint(count_distinct_values(input_line))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 5
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 98,
+        "wall_clock_seconds": 1.23,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-3",
+      "difficulty": "easy",
+      "prompt": "Read an integer n and print the nth Fibonacci number (0-indexed: fib(0)=0, fib(1)=1).\n\nExample:\n7\nOutput: 13",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 540,
+        "wall_clock_seconds": 3.29,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-3"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Use an iterative approach to calculate the nth Fibonacci number. Initialize two variables to represent the first two numbers in the sequence, then iterate from 2 to n, updating the values at each step.",
+              "edge_cases": [
+                "n = 0",
+                "n = 1",
+                "n = 2"
+              ],
+              "test_ideas": [
+                "Test with n = 7 (expected output: 13)",
+                "Test with n = 10 (expected output: 55)",
+                "Test with large n (e.g., n = 100) to ensure efficiency"
+              ],
+              "complexity_target": "O(n) time and O(1) space"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "import sys\n\ndef fibonacci(n):\n    a, b = 0, 1\n    for _ in range(n):\n        a, b = b, a + b\n    return a\n\nn = int(input().strip())\nprint(fibonacci(n))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 5
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 158,
+        "wall_clock_seconds": 2.29,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-4",
+      "difficulty": "easy",
+      "prompt": "Read a positive integer and print the sum of its digits.\n\nExample:\n123\nOutput: 6\n\nExample:\n9999\nOutput: 36",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 489,
+        "wall_clock_seconds": 2.92,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-4"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Convert the integer to a string, iterate through each character, convert each back to an integer, and sum them up.",
+              "edge_cases": [
+                "Input is 0",
+                "Input is a single-digit number",
+                "Input has leading zeros (if allowed)"
+              ],
+              "test_ideas": [
+                "Test with 123",
+                "Test with 9999",
+                "Test with 0",
+                "Test with 1"
+              ],
+              "complexity_target": "O(n), where n is the number of digits in the input"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "import sys\n\ndef sum_of_digits(n):\n    return sum(int(digit) for digit in str(n))\n\ninput_number = int(sys.stdin.readline().strip())\nprint(sum_of_digits(input_number))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 5
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 115,
+        "wall_clock_seconds": 1.49,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-5",
+      "difficulty": "easy",
+      "prompt": "Read a binary string and print its decimal value.\n\nExample:\n101\nOutput: 5\n\nExample:\n1111\nOutput: 15",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 485,
+        "wall_clock_seconds": 2.73,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-5"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Iterate through each character of the binary string, starting from the leftmost digit. For each digit, multiply the current result by 2 and add the integer value of the current digit.",
+              "edge_cases": [
+                "Empty string",
+                "String with only '0'"
+              ],
+              "test_ideas": [
+                "Binary string '101'",
+                "Binary string '1111'",
+                "Binary string '0'",
+                "Binary string '1'"
+              ],
+              "complexity_target": "O(n), where n is the length of the binary string"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "binary_string = input().strip()\ndecimal_value = 0\n\nfor char in binary_string:\n    decimal_value = decimal_value * 2 + int(char)\n\nprint(decimal_value)",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 5
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 108,
+        "wall_clock_seconds": 1.31,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-6",
+      "difficulty": "easy",
+      "prompt": "Read an integer n and print the FizzBuzz sequence from 1 to n, space-separated. Print Fizz for multiples of 3, Buzz for multiples of 5, FizzBuzz for multiples of both.\n\nExample:\n5\nOutput: 1 2 Fizz 4 Buzz",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 668,
+        "wall_clock_seconds": 4.0,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-6"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Iterate from 1 to n. For each number, check if it is divisible by 3 and/or 5. Print 'Fizz', 'Buzz', or 'FizzBuzz' accordingly. If none of the conditions are met, print the number itself.",
+              "edge_cases": [
+                "n = 0",
+                "n = 1",
+                "n = 3",
+                "n = 5",
+                "n = 15"
+              ],
+              "test_ideas": [
+                "Test with n = 15 to verify FizzBuzz logic",
+                "Test with n = 1 to ensure single output",
+                "Test with n = 0 to handle invalid input"
+              ],
+              "complexity_target": "O(n)"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "import sys\n\ndef fizz_buzz(n):\n    result = []\n    for i in range(1, n + 1):\n        if i % 3 == 0 and i % 5 == 0:\n            result.append(\"FizzBuzz\")\n        elif i % 3 == 0:\n            result.append(\"Fizz\")\n        elif i % 5 == 0:\n            result.append(\"Buzz\")\n        else:\n            result.append(str(i))\n    return \" \".join(result)\n\nn = int(input().strip())\nprint(fizz_buzz(n))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 5
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 198,
+        "wall_clock_seconds": 2.47,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-7",
+      "difficulty": "medium",
+      "prompt": "Read a string of brackets: (, ), [, ], {, }. Print True if the brackets are balanced (every open bracket closed in correct order), otherwise False.\n\nExample:\n()[]{}\nOutput: True\n\nExample:\n([)]\nOutput: False",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 587,
+        "wall_clock_seconds": 3.55,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-7"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Use a stack to track opening brackets. For each closing bracket, check if it matches the top of the stack. If it does, pop the stack; otherwise, return False. At the end, check if the stack is empty.",
+              "edge_cases": [
+                "Empty string",
+                "Single bracket",
+                "All opening brackets",
+                "All closing brackets"
+              ],
+              "test_ideas": [
+                "()[]{}",
+                "([)]",
+                "({[]})",
+                "((()))",
+                "([{}])",
+                "(()",
+                "())",
+                "([)]",
+                "(([]))"
+              ],
+              "complexity_target": "O(n) time and space"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "def is_balanced(s):\n    stack = []\n    bracket_map = {')': '(', ']': '[', '}': '{'}\n\n    for char in s:\n        if char in bracket_map.values():\n            stack.append(char)\n        elif char in bracket_map.keys():\n            if not stack or stack.pop() != bracket_map[char]:\n                return False\n    return not stack\n\nprint(is_balanced(input()))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 6
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 177,
+        "wall_clock_seconds": 2.29,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-8",
+      "difficulty": "medium",
+      "prompt": "Read a non-empty string (no spaces) and print its run-length encoding: for each run of consecutive identical characters, output the count followed by the character.\n\nExample:\naabcccdddd\nOutput: 2a1b3c4d\n\nExample:\nabcd\nOutput: 1a1b1c1d",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 636,
+        "wall_clock_seconds": 3.77,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-8"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Iterate through the string, tracking the current character and its count. When the next character is different, append the count and character to the result, then reset the count and current character.",
+              "edge_cases": [
+                "Single character input",
+                "All characters same",
+                "Alternating characters"
+              ],
+              "test_ideas": [
+                "Input with all same characters",
+                "Input with alternating characters",
+                "Input with one character",
+                "Input with multiple runs of different lengths"
+              ],
+              "complexity_target": "O(n) where n is the length of the input string"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "import sys\n\ndef run_length_encoding(s):\n    if not s:\n        return \"\"\n    \n    result = []\n    current_char = s[0]\n    count = 1\n    \n    for i in range(1, len(s)):\n        if s[i] == current_char:\n            count += 1\n        else:\n            result.append(f\"{count}{current_char}\")\n            current_char = s[i]\n            count = 1\n    result.append(f\"{count}{current_char}\")\n    \n    return ''.join(result)\n\ninput_string = input().strip()\nprint(run_length_encoding(input_string))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 5
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 218,
+        "wall_clock_seconds": 2.68,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-9",
+      "difficulty": "medium",
+      "prompt": "Read an integer n >= 2 and print its prime factors in ascending order, space-separated (repeat factors as needed).\n\nExample:\n12\nOutput: 2 2 3\n\nExample:\n7\nOutput: 7",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 701,
+        "wall_clock_seconds": 4.76,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-9"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Start with the smallest prime number (2) and divide the given number as long as it is divisible. Move to the next possible divisor and repeat until the number becomes 1. Track all divisors used during this process to get the prime factors.",
+              "edge_cases": [
+                "n = 2",
+                "n is a large prime number",
+                "n is a power of 2"
+              ],
+              "test_ideas": [
+                "Test with n = 12 (output: 2 2 3)",
+                "Test with n = 7 (output: 7)",
+                "Test with n = 60 (output: 2 2 3 5)",
+                "Test with n = 1000000007 (a large prime)"
+              ],
+              "complexity_target": "O(sqrt(n))"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "import sys\n\ndef prime_factors(n):\n    factors = []\n    # Divide by 2 until n is odd\n    while n % 2 == 0:\n        factors.append(2)\n        n = n // 2\n    # Check for odd factors from 3 onwards\n    for i in range(3, int(n**0.5) + 1, 2):\n        while n % i == 0:\n            factors.append(i)\n            n = n // i\n    # If n is a prime number greater than 2\n    if n > 2:\n        factors.append(n)\n    return factors\n\nn = int(input().strip())\nfactors = prime_factors(n)\nprint(\" \".join(map(str, factors)))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 5
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 170,
+        "wall_clock_seconds": 2.24,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-10",
+      "difficulty": "medium",
+      "prompt": "Read a target integer on the first line and a space-separated list of integers on the second line. Find the two indices (0-indexed) whose values sum to the target and print them space-separated (smaller index first). There is exactly one solution and you may not use the same element twice.\n\nExample:\n9\n2 7 11 15\nOutput: 0 1",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 716,
+        "wall_clock_seconds": 3.79,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-10"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Use a hash map (dictionary) to store the value-to-index mapping as we iterate through the list. For each element, check if the complement (target - current element) exists in the hash map. If it does, return the indices of the current element and the complement.",
+              "edge_cases": [
+                "Target is the sum of the first two elements",
+                "Target is the sum of the last two elements",
+                "The list contains negative numbers"
+              ],
+              "test_ideas": [
+                "Test with a small list of two elements",
+                "Test with a list where the solution is at the end",
+                "Test with a list containing duplicate values but only one valid pair"
+              ],
+              "complexity_target": "O(n) time complexity, O(n) space complexity"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "import sys\n\ndef two_sum(nums, target):\n    num_to_index = {}\n    for i, num in enumerate(nums):\n        complement = target - num\n        if complement in num_to_index:\n            return [num_to_index[complement], i]\n        num_to_index[num] = i\n    return []\n\ntarget = int(input().strip())\nnums = list(map(int, input().strip().split()))\n\nresult = two_sum(nums, target)\nprint(*result)",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 5
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 248,
+        "wall_clock_seconds": 2.97,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-11",
+      "difficulty": "medium",
+      "prompt": "Read an integer n on the first line, then n strings each on its own line. Print the longest common prefix of all strings. If there is no common prefix, print an empty line.\n\nExample:\n3\nflower\nflow\nflight\nOutput: fl",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 625,
+        "wall_clock_seconds": 5.27,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-11"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Find the minimum length string from the list. Compare characters at each position for all strings until a mismatch is found. The substring up to the first mismatch is the longest common prefix.",
+              "edge_cases": [
+                "All strings are identical",
+                "No common prefix exists",
+                "Only one string provided",
+                "Strings have varying lengths"
+              ],
+              "test_ideas": [
+                "Test with multiple strings having a common prefix",
+                "Test with no common prefix",
+                "Test with one string",
+                "Test with empty strings"
+              ],
+              "complexity_target": "O(n*m) where n is the number of strings and m is the length of the shortest string"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "import sys\n\ndef longest_common_prefix(strings):\n    if not strings:\n        return \"\"\n    \n    # Find the shortest string in the list\n    shortest_str = min(strings, key=len)\n    \n    for i, char in enumerate(shortest_str):\n        for other in strings:\n            if other[i] != char:\n                return shortest_str[:i]\n    return shortest_str\n\nn = int(input().strip())\nstrings = [input().strip() for _ in range(n)]\nprint(longest_common_prefix(strings))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 5
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 217,
+        "wall_clock_seconds": 2.93,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-12",
+      "difficulty": "medium",
+      "prompt": "Read an integer n (cents) and print the minimum number of coins needed to make exactly n cents using coins of 1, 5, 10, and 25 cents.\n\nExample:\n11\nOutput: 2\n\nExample (11 = 10 + 1):\nFor n=41: 25+10+5+1 = 4 coins.",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 605,
+        "wall_clock_seconds": 3.14,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-12"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Use a greedy algorithm by always using the largest coin possible until the remaining cents are zero.",
+              "edge_cases": [
+                "n = 0",
+                "n = 1",
+                "n = 5",
+                "n = 25"
+              ],
+              "test_ideas": [
+                "n = 0 (expected 0)",
+                "n = 1 (expected 1)",
+                "n = 5 (expected 1)",
+                "n = 25 (expected 1)",
+                "n = 41 (expected 4)"
+              ],
+              "complexity_target": "O(1)"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "import sys\n\ndef min_coins(n):\n    coins = [25, 10, 5, 1]\n    count = 0\n    for coin in coins:\n        count += n // coin\n        n %= coin\n    return count\n\nn = int(input().strip())\nprint(min_coins(n))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 5
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 182,
+        "wall_clock_seconds": 1.76,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-13",
+      "difficulty": "hard",
+      "prompt": "Read a string and print the length of its longest palindromic substring.\n\nExample:\nbabad\nOutput: 3\n\nExample:\ncbbd\nOutput: 2\n\n(Both 'bab' and 'aba' have length 3 for 'babad'.)",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 706,
+        "wall_clock_seconds": 4.62,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-13"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Use dynamic programming to check for palindromic substrings. Create a 2D array where dp[i][j] is true if the substring from index i to j is a palindrome. Iterate through the string and fill the dp table, keeping track of the maximum length found.",
+              "edge_cases": [
+                "Single character string",
+                "All characters same",
+                "All characters different",
+                "Even length palindrome"
+              ],
+              "test_ideas": [
+                "Input: 'a'",
+                "Input: 'aaaa'",
+                "Input: 'abcde'",
+                "Input: 'abba'"
+              ],
+              "complexity_target": "O(n^2) time and space"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "def longest_palindromic_substring(s):\n    n = len(s)\n    if n == 0:\n        return 0\n    \n    dp = [[False] * n for _ in range(n)]\n    max_length = 1\n    \n    for i in range(n):\n        dp[i][i] = True\n    \n    for start in range(n-1, -1, -1):\n        for end in range(start + 1, n):\n            if s[start] == s[end]:\n                if end - start == 1 or dp[start+1][end-1]:\n                    dp[start][end] = True\n                    max_length = max(max_length, end - start + 1)\n    \n    return max_length\n\nimport sys\ns = input().strip()\nprint(longest_palindromic_substring(s))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 6
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 312,
+        "wall_clock_seconds": 4.66,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-14",
+      "difficulty": "hard",
+      "prompt": "Read an integer k on the first line and a string on the second line. Apply a Caesar cipher: shift each alphabetic character forward by k positions (wrapping around, preserving case). Non-alphabetic characters are unchanged.\n\nExample:\n3\nHello, World!\nOutput: Khoor, Zruog!\n\nExample:\n13\nROT13\nOutput: EBG13",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 808,
+        "wall_clock_seconds": 6.01,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-14"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Read the integer k and the string. For each character in the string, check if it is alphabetic. If it is, shift it by k positions forward, wrapping around the alphabet (e.g., 'z' + 1 becomes 'a'). Preserve the case of the original character. Non-alphabetic characters remain unchanged.",
+              "edge_cases": [
+                "k is 0",
+                "k is larger than 26",
+                "string contains no alphabetic characters",
+                "string contains only non-alphabetic characters",
+                "string has uppercase and lowercase letters"
+              ],
+              "test_ideas": [
+                "Test with k = 0 and a mixed-case string",
+                "Test with k = 26 and a string with all letters",
+                "Test with a string that includes numbers and symbols",
+                "Test with a string where shifting causes wrap-around (e.g., 'z' with k = 1)",
+                "Test with a large k value (e.g., 100)"
+              ],
+              "complexity_target": "O(n), where n is the length of the string"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "import sys\n\ndef caesar_cipher(k, s):\n    result = []\n    for char in s:\n        if char.isalpha():\n            base = ord('A') if char.isupper() else ord('a')\n            shifted_char = chr((ord(char) - base + k) % 26 + base)\n            result.append(shifted_char)\n        else:\n            result.append(char)\n    return ''.join(result)\n\nk = int(input())\ns = input().strip()\nprint(caesar_cipher(k, s))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 6
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 251,
+        "wall_clock_seconds": 3.23,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    },
+    {
+      "id": "HE-15",
+      "difficulty": "hard",
+      "prompt": "Read a space-separated list of integers and print the maximum sum of any contiguous subarray (must contain at least one element).\n\nExample:\n-2 1 -3 4 -1 2 1 -5 4\nOutput: 6\n\nExample:\n5 4 -1 7 8\nOutput: 23",
+      "quorum": {
+        "solved": true,
+        "attempts_used": 1,
+        "replan_count": 0,
+        "total_tokens": 582,
+        "wall_clock_seconds": 4.47,
+        "sandbox_runs": 1,
+        "failure_reason": null,
+        "events": [
+          {
+            "agent": "orchestrator",
+            "type": "start",
+            "data": {
+              "problem_id": "HE-15"
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "start",
+            "data": {
+              "has_feedback": false
+            }
+          },
+          {
+            "agent": "planner",
+            "type": "output",
+            "data": {
+              "approach": "Use Kadane's algorithm to find the maximum sum of a contiguous subarray. Iterate through the list, maintaining a running sum and updating the maximum sum found so far.",
+              "edge_cases": [
+                "All elements are negative",
+                "Single element in the list",
+                "All elements are positive"
+              ],
+              "test_ideas": [
+                "Input with all negative numbers",
+                "Input with one positive and rest negative",
+                "Input with alternating positive and negative numbers"
+              ],
+              "complexity_target": "O(n)"
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "start",
+            "data": {
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "coder",
+            "type": "output",
+            "data": {
+              "code": "import sys\n\ndef max_subarray_sum(nums):\n    max_current = max_global = nums[0]\n    for num in nums[1:]:\n        max_current = max(num, max_current + num)\n        if max_current > max_global:\n            max_global = max_current\n    return max_global\n\ninput_nums = list(map(int, input().split()))\nprint(max_subarray_sum(input_nums))",
+              "attempt": 1
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "start",
+            "data": {
+              "num_tests": 5
+            }
+          },
+          {
+            "agent": "verifier",
+            "type": "output",
+            "data": {
+              "passed": true
+            }
+          },
+          {
+            "agent": "orchestrator",
+            "type": "done",
+            "data": {
+              "status": "solved",
+              "reason": null,
+              "attempts": 1,
+              "replans": 0
+            }
+          }
+        ]
+      },
+      "baseline": {
+        "solved": true,
+        "attempts_used": 1,
+        "total_tokens": 251,
+        "wall_clock_seconds": 3.26,
+        "sandbox_runs": 1,
+        "failure_reason": null
+      }
+    }
+  ],
+  "summary": {
+    "quorum": {
+      "solve_rate": 1.0,
+      "solved": 15,
+      "total": 15,
+      "avg_attempts": 1.0,
+      "avg_tokens_solved": 616.0,
+      "avg_tokens_all": 616.0,
+      "avg_latency_seconds": 4.01,
+      "total_tokens": 9243
+    },
+    "baseline": {
+      "solve_rate": 1.0,
+      "solved": 15,
+      "total": 15,
+      "avg_attempts": 1.0,
+      "avg_tokens_solved": 194.0,
+      "avg_tokens_all": 194.0,
+      "avg_latency_seconds": 2.47,
+      "total_tokens": 2913
+    }
+  }
+}

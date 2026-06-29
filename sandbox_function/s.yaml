@@ -1,0 +1,21 @@
+edition: 3.0.0
+name: quorum-sandbox
+
+vars:
+  region: ap-southeast-1
+
+resources:
+  quorum-sandbox-fn:
+    component: fc3
+    props:
+      region: ${vars.region}
+      functionName: quorum-sandbox
+      description: "Quorum isolated code execution sandbox"
+      runtime: python3.10
+      handler: handler.handler
+      timeout: 10
+      memorySize: 256
+      environmentVariables:
+        SANDBOX_TIMEOUT_SECS: "8"
+      code:
+        src: ./
