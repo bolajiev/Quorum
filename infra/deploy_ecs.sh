@@ -31,7 +31,7 @@ After=network.target
 
 [Service]
 WorkingDirectory=/opt/quorum/backend
-ExecStart=/usr/bin/python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000
+ExecStart=/usr/bin/python3 -m uvicorn app.main:app --host 0.0.0.0 --port 80
 Restart=always
 EnvironmentFile=/opt/quorum/.env
 
