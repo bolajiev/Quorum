@@ -23,7 +23,7 @@
   --font-mono:    'IBM Plex Mono', monospace;
 }
 
-html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; }
+html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--font-body); font-size: 14px; overflow: hidden; }
 
 /* ── Topbar ──────────────────────────────────────────────────────────────── */
 .topbar {
@@ -94,12 +94,42 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 .status-bar.solved  { color: var(--pass); }
 .status-bar.failed  { color: var(--fail); }
 
+/* ── Custom problem strip ────────────────────────────────────────────────── */
+.custom-strip {
+  display: none;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 10px 16px;
+  flex-shrink: 0;
+}
+
+.custom-textarea {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.5;
+  padding: 8px 12px;
+  resize: vertical;
+  min-height: 70px;
+  outline: none;
+  transition: border-color .15s;
+}
+.custom-textarea:focus { border-color: var(--planner); }
+.custom-textarea::placeholder { color: var(--muted); }
+
 /* ── Main workspace ──────────────────────────────────────────────────────── */
+html, body { display: flex; flex-direction: column; }
+
 .workspace {
   display: grid;
   grid-template-columns: 1fr 360px;
   gap: 0;
-  height: calc(100vh - 52px);
+  flex: 1;
+  min-height: 0;
   overflow: hidden;
 }
 

@@ -66,16 +66,28 @@ async def ws_solve(websocket: WebSocket):
         data = await websocket.receive_json()
         system = data.get("system", "quorum")
         problem_id = data.get("problem_id", "HE-1")
+        problem_text = data.get("problem_text", "")
 
-        p = pathlib.Path(__file__).parent / "benchmark" / "problems" / "problems.json"
-        with open(p) as f:
-            problems = {prob["id"]: prob for prob in json.load(f)}
+        if problem_id == "custom":
+            if not problem_text.strip():
+                await safe_send({"type": "error", "message": "No problem text provided."})
+                return
+            problem = {
+                "id": "custom",
+                "difficulty": "custom",
+                "prompt": problem_text.strip(),
+                "tests": [],
+            }
+        else:
+            p = pathlib.Path(__file__).parent / "benchmark" / "problems" / "problems.json"
+            with open(p) as f:
+                problems = {prob["id"]: prob for prob in json.load(f)}
 
-        if problem_id not in problems:
-            await safe_send({"type": "error", "message": f"Unknown problem: {problem_id}"})
-            return
+            if problem_id not in problems:
+                await safe_send({"type": "error", "message": f"Unknown problem: {problem_id}"})
+                return
 
-        problem = problems[problem_id]
+            problem = problems[problem_id]
 
         if system == "quorum":
             from app.agents.orchestrator import solve

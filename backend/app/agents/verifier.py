@@ -29,6 +29,14 @@ def verify(
     """
     emit(AgentEvent("verifier", "start", {"num_tests": len(tests)}))
 
+    if not tests:
+        # Custom problem with no test cases — accept the code as-is
+        emit(AgentEvent("verifier", "output", {
+            "passed": True,
+            "note": "No test cases — code accepted. Review the output manually.",
+        }))
+        return {"passed": True, "failures": []}, None
+
     result = run_tests(code, tests)
 
     if result["passed"]:

@@ -15,13 +15,15 @@ let benchmarkData = null;
 let tokenChart = null;
 
 // ── DOM refs ─────────────────────────────────────────────────────────────────
-const $select    = document.getElementById('problem-select');
-const $transcript= document.getElementById('transcript');
-const $statusBar = document.getElementById('status-bar');
-const $btnQ      = document.getElementById('btn-quorum');
-const $btnB      = document.getElementById('btn-baseline');
-const $btnBoth   = document.getElementById('btn-both');
-const $clearBtn  = document.getElementById('clear-btn');
+const $select       = document.getElementById('problem-select');
+const $transcript   = document.getElementById('transcript');
+const $statusBar    = document.getElementById('status-bar');
+const $btnQ         = document.getElementById('btn-quorum');
+const $btnB         = document.getElementById('btn-baseline');
+const $btnBoth      = document.getElementById('btn-both');
+const $clearBtn     = document.getElementById('clear-btn');
+const $customStrip  = document.getElementById('custom-strip');
+const $customProblem= document.getElementById('custom-problem');
 
 // ── Init ─────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -32,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
   $btnB   .addEventListener('click', () => runSolve('baseline'));
   $btnBoth.addEventListener('click', () => { runSolve('quorum'); runSolve('baseline'); });
   $clearBtn.addEventListener('click', clearTranscript);
+  $select.addEventListener('change', toggleCustomStrip);
 
   document.querySelectorAll('.tab').forEach(t => {
     t.addEventListener('click', () => switchTab(t.dataset.system));
@@ -41,6 +44,17 @@ document.addEventListener('DOMContentLoaded', () => {
 // ── Problems dropdown ─────────────────────────────────────────────────────────
 async function loadProblems() {
   try {
+    // Custom option first
+    const customOpt = document.createElement('option');
+    customOpt.value = 'custom';
+    customOpt.textContent = '✏ Custom Problem';
+    $select.appendChild(customOpt);
+
+    const sep = document.createElement('option');
+    sep.disabled = true;
+    sep.textContent = '─────────────────';
+    $select.appendChild(sep);
+
     const data = await fetch(`${API_BASE}/api/problems`).then(r => r.json());
     data.forEach(p => {
       const opt = document.createElement('option');
@@ -48,9 +62,18 @@ async function loadProblems() {
       opt.textContent = `${p.id} · ${p.difficulty}`;
       $select.appendChild(opt);
     });
+
+    // Default to first real problem
+    $select.value = data[0]?.id || 'custom';
+    toggleCustomStrip();
   } catch (e) {
     console.error('Failed to load problems', e);
   }
+}
+
+function toggleCustomStrip() {
+  const isCustom = $select.value === 'custom';
+  $customStrip.style.display = isCustom ? 'block' : 'none';
 }
 
 // ── Benchmark scoreboard ─────────────────────────────────────────────────────
@@ -193,6 +216,16 @@ function runSolve(system) {
   const problemId = $select.value;
   if (!problemId) return;
 
+  if (problemId === 'custom') {
+    const text = $customProblem.value.trim();
+    if (!text) {
+      $customProblem.focus();
+      $customProblem.style.borderColor = 'var(--critic)';
+      setTimeout(() => $customProblem.style.borderColor = '', 1500);
+      return;
+    }
+  }
+
   // Close any existing WS for this system
   if (sys[system].ws) { sys[system].ws.close(); sys[system].ws = null; }
 
@@ -207,7 +240,9 @@ function runSolve(system) {
   setButtons(true);
 
   ws.addEventListener('open', () => {
-    ws.send(JSON.stringify({ system, problem_id: problemId }));
+    const payload = { system, problem_id: problemId };
+    if (problemId === 'custom') payload.problem_text = $customProblem.value.trim();
+    ws.send(JSON.stringify(payload));
   });
 
   ws.addEventListener('message', ({ data }) => {
@@ -267,7 +302,9 @@ function handleEvent(system, msg) {
   } else if (agent === 'coder' && type === 'error') {
     text = `⚠ ${data.reason || 'No code block returned'}`;
   } else if (agent === 'verifier' && type === 'output') {
-    if (data.passed) {
+    if (data.passed && data.note) {
+      text = `✓ ${data.note}`;
+    } else if (data.passed) {
       text = '✓ All tests passed';
     } else {
       const fr = parseFR(data.failure_report);
