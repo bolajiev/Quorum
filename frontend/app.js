@@ -312,6 +312,8 @@ function handleEvent(system, msg) {
       const fr = parseFR(data.failure_report);
       text = `✕ ${data.num_failures} test(s) failed — ${fr}`;
     }
+  } else if (agent === 'orchestrator' && type === 'tests_generated') {
+    text = `Planner generated ${data.count} test case(s) — code will be verified against them`;
   } else if (agent === 'orchestrator' && type === 'done') {
     text = data.status === 'solved'
       ? `✓ SOLVED in ${data.attempts} attempt(s)`

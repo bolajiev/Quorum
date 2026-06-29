@@ -74,11 +74,25 @@ def solve(problem: dict, emit: EventCallback = noop_emit) -> QuorumResult:
     state = OrchestrationState(problem_id=problem["id"])
     _emit(AgentEvent("orchestrator", "start", {"problem_id": problem["id"]}))
 
+    # For custom problems without tests, ask the Planner to generate them
+    is_custom = not problem.get("tests")
+
     # ── Initial plan ──────────────────────────────────────────────────────────
-    plan_dict, usage = planner.plan(problem["prompt"], emit=_emit)
+    plan_dict, usage = planner.plan(
+        problem["prompt"], emit=_emit, generate_tests=is_custom
+    )
     _track(usage, "plan_0")
     state.plan = plan_dict
     state.status = "coding"
+
+    # Use planner-generated tests if the problem has none
+    tests = problem.get("tests") or []
+    if is_custom and plan_dict.get("sample_tests"):
+        tests = plan_dict["sample_tests"]
+        _emit(AgentEvent("orchestrator", "tests_generated", {
+            "count": len(tests),
+            "source": "planner",
+        }))
 
     # ── Main loop ─────────────────────────────────────────────────────────────
     while state.coder_attempts < config.MAX_CODER_ATTEMPTS:
@@ -106,7 +120,7 @@ def solve(problem: dict, emit: EventCallback = noop_emit) -> QuorumResult:
         # — Verifier —
         sandbox_runs += 1
         state.status = "verifying"
-        result, v_usage = verifier.verify(code_str, problem["tests"], emit=_emit)
+        result, v_usage = verifier.verify(code_str, tests, emit=_emit)
         if v_usage:
             _track(v_usage, f"verify_summarize_{state.coder_attempts}")
 
@@ -145,9 +159,13 @@ def solve(problem: dict, emit: EventCallback = noop_emit) -> QuorumResult:
                 return _finish(solved=False, reason="Replan cap reached")
             state.replan_count += 1
             feedback = decision["reasoning"] + "\nNew direction: " + decision["guidance"]
-            plan_dict, usage = planner.plan(problem["prompt"], feedback, emit=_emit)
+            plan_dict, usage = planner.plan(
+                problem["prompt"], feedback, emit=_emit, generate_tests=is_custom
+            )
             _track(usage, f"replan_{state.replan_count}")
             state.plan = plan_dict
+            if is_custom and plan_dict.get("sample_tests"):
+                tests = plan_dict["sample_tests"]
             state.last_failure_report = None  # fresh plan, drop old failures
 
         else:  # patch
