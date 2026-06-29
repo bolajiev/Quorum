@@ -44,5 +44,5 @@ fi
 
 systemctl restart quorum
 systemctl --no-pager status quorum | head -5
-echo "==> Quorum running on http://$HOSTNAME:8000"
+echo "==> Quorum running on http://$HOSTNAME"
 REMOTE

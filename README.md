@@ -38,7 +38,7 @@ PYTHONPATH=. python3 -m app.benchmark.runner
 # 4. Start the server
 PYTHONPATH=. python3 -m uvicorn app.main:app --host 0.0.0.0 --port 80
 
-# 5. Open http://localhost:8000
+# 5. Open http://localhost
 ```
 
 ---
